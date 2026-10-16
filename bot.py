@@ -1094,4 +1094,8 @@ async def owners_command(ctx: commands.Context):
 #  Entry Point
 # =========================================================
 
+import http.server
+import socketserver
+import threading
+threading.Thread(target=lambda: socketserver.TCPServer(("", 10000), http.server.SimpleHTTPRequestHandler).serve_forever(), daemon=True).start()
 bot.run(DISCORD_TOKEN)
