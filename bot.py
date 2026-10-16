@@ -1099,3 +1099,30 @@ import socketserver
 import threading
 threading.Thread(target=lambda: socketserver.TCPServer(("", 10000), http.server.SimpleHTTPRequestHandler).serve_forever(), daemon=True).start()
 bot.run(DISCORD_TOKEN)
+@bot.event
+async def on_raw_reaction_add(payload):
+    # Ignorera om botten själv lägger till en flagga
+    if payload.user_id == bot.user.id:
+        return
+        
+    # Lista på flaggor som botten ska lyssna på
+    flags = {'🇺🇸': 'English', '🇬🇧': 'English', '🇪🇸': 'Spanish', '🇷🇺': 'Russian', '🇫🇷': 'French', '🇩🇪': 'German'}
+    emoji_str = str(payload.emoji)
+    
+    if emoji_str in flags:
+        target_lang = flags[emoji_str]
+        channel = bot.get_channel(payload.channel_id)
+        msg = await channel.fetch_message(payload.message_id)
+        
+        # Ignorera tomma meddelanden eller bilder
+        if not msg.content:
+            return
+            
+        try:
+            # Använder bottens egna, inbyggda översättningsfunktion (Gemini AI)
+            translated_text = await translate_text(msg.content, target_lang)
+            
+            # Skickar översättningen som ett svar direkt under meddelandet
+            await channel.send(f"**{target_lang} translation:** {translated_text}", reference=msg)
+        except Exception as e:
+            print(f"Translation error: {e}")
