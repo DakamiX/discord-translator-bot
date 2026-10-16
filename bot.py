@@ -1107,7 +1107,7 @@ async def on_raw_reaction_add(payload):
         return
         
     # Lista på flaggor som botten ska lyssna på
-    flags = {'🇺🇸': 'English', '🇬🇧': 'English', '🇪🇸': 'Spanish', '🇷🇺': 'Russian', '🇫🇷': 'French', '🇩🇪': 'German'}
+    flags = {':flag_us:': 'English', ':flag_gb:': 'English', ':flag_es:': 'Spanish', ':flag_ru:': 'Russian', ':flag_fr:': 'French', ':flag_de:': 'German'}
     emoji_str = str(payload.emoji)
     
     if emoji_str in flags:
